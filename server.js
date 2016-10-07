@@ -18,6 +18,7 @@ const russianRoulette = (req, res) => {
     Math.floor(Math.random() * errors.length)]('It blew up!');
 };
 
+
 // note that `makeEmailAlertMiddleware` is a closure -- it returns a 
 // middleware function
 const emailAlertMiddleware = makeEmailAlertMiddleware([FooError, BarError]);
@@ -29,6 +30,7 @@ app.get('*', russianRoulette);
 
 app.use(emailAlertMiddleware);
 app.use((err, req, res, next) => {
+  logger.error(err)
   res.status(500).json({error: 'Something went wrong'}).end();
 })
 
