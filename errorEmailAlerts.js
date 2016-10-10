@@ -3,7 +3,8 @@
 const {logger} = require('./utilities/logger');
 const {sendEmail} = require('./emailer');
 
-// these env vars are in `.env`, which should never be committed to git
+// For deployment on Hyper dev, these env vars are in `.env`.
+// Never commit a `.env` file toto git
 // because it's a place for storing sensitive config variables.
 const {ALERT_FROM_EMAIL, ALERT_FROM_NAME, ALERT_TO_EMAIL} = process.env;
 // we log some errors if these env vars aren't set
@@ -23,7 +24,7 @@ const makeEmailAlertMiddleware = (errorTypes) => (err, req, res, next) => {
       'FromEmail': ALERT_FROM_EMAIL,
       'FromName': ALERT_FROM_NAME,
       'Subject': `SERVICE ALERT: ${err.name}`,
-      'Text-part': `Something went wrong. Here's what we know: \n\n${err.message}`,
+      'Text-part': `Something went wrong. Here's what we know: \n\n${err.message}\n\n${err.stack}`,
       'Recipients': [{'Email': ALERT_TO_EMAIL},]
     };
     sendEmail(data);
