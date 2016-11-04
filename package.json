@@ -4,16 +4,13 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"start": "node --harmony --harmony_destructuring server.js"
+		"start": "node server.js"
 	},
 	"dependencies": {
 		"express": "^4.12.4",
 		"morgan": "^1.7.0",
 		"winston": "^2.2.0",
 		"node-mailjet": "^3.0.4"
-	},
-	"engines": {
-		"node": "4.4.3"
 	},
 	"repository": {
 		"type": "git",
