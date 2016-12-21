@@ -1,29 +1,29 @@
 'use strict';
 
-const mailJet = require('node-mailjet');
+const nodemailer = require('nodemailer');
 const {logger} = require('./utilities/logger');
 
 // stored in `.env` -- never store passwords, api keys
 // etc. inside source code
-const {MAILJET_KEY, MAILJET_SECRET} = process.env;
+const {SMTP_URL} = process.env;
 
-// we log some errors if these env vars aren't set
-if (!(MAILJET_KEY && MAILJET_SECRET)) {
-  logger.error('Missing required config var in `.env`');
+
+// `emailData` is an object that looks like this:
+// {
+//  from: "foo@bar.com",
+//  to: "bizz@bang.com, marco@polo.com",
+//  subject: "Hello world",
+//  text: "Plain text content",
+//  html: "<p>HTML version</p>"
+// }
+const sendEmail = (emailData, smtpUrl=SMTP_URL) => {
+  const transporter = nodemailer.createTransport(SMTP_URL);
+  logger.info(`Attempting to send email from ${emailData.from}`);
+  return transporter
+    .sendMail(emailData)
+    .then(info => console.log(`Message sent: ${info.response}`))
+    .catch(err => console.log(`Problem sending email: ${err}`));
 }
-
-// send an email using Mailjet.
-// `emailData` is an object
-const sendEmail = (emailData) => {
-  const mailer = mailJet.connect(MAILJET_KEY, MAILJET_SECRET);
-  logger.info(emailData);
-  mailer
-    .post('send')
-    .request(emailData)
-    .then(() => logger.info(
-      `SUCCESS: \`sendAlertEmail\` sent email`))
-    .catch((e) => logger.error(`FAILURE: problem sending email. ${e.message}`));
-};
 
 
 module.exports = {sendEmail};
