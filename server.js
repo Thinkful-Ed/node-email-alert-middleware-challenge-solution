@@ -44,7 +44,7 @@ function doErrorEmailAlerts(err, req, res, next) {
   }
   // always want to call next to pass control to next
   // middleware function
-  next();
+  next(err);
 }
 
 app.use(doErrorEmailAlerts);
