@@ -16,7 +16,7 @@ const app = express();
 
 // this route handler randomly throws one of `FooError`,
 // `BarError`, or `BizzError`
-const russianRoulette = (req, res) => {
+function russianRoulette(req, res) {
   const errors = [FooError, BarError, BizzError];
   throw new errors[
     Math.floor(Math.random() * errors.length)]('It blew up!');
@@ -28,8 +28,8 @@ app.use(morgan('common', {stream: logger.stream}));
 // for any GET request, we'll run our `russianRoulette` function
 app.get('*', russianRoulette);
 
-
-const doErrorEmailAlerts = (err, req, res, next) => {
+// OR function doErrorEmailAlerts(err, req, res, next) {
+function doErrorEmailAlerts(err, req, res, next) {
   // if it's an error we care about send a message
   if (err instanceof FooError || err instanceof BarError) {
     logger.info(`Attempting to send error alert email to ${ALERT_TO_EMAIL}`);
@@ -44,7 +44,7 @@ const doErrorEmailAlerts = (err, req, res, next) => {
   }
   // always want to call next to pass control to next
   // middleware function
-  next();
+  next(err);
 }
 
 app.use(doErrorEmailAlerts);
@@ -57,6 +57,6 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 8080;
 
-const listener = app.listen(port, function () {
+app.listen(port, function () {
   logger.info(`Your app is listening on port ${port}`);
 });
