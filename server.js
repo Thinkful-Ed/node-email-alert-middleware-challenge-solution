@@ -57,6 +57,6 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 8080;
 
-const listener = app.listen(port, function () {
+app.listen(port, function () {
   logger.info(`Your app is listening on port ${port}`);
 });
